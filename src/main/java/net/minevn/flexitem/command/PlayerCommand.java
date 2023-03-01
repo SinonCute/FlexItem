@@ -154,6 +154,10 @@ public class PlayerCommand implements CommandExecutor, TabCompleter {
             if (Config.getExcludeNames().contains(ItemStackUtils.getItemDisplayName(item).replace("§", "&").substring(2))) continue;
             container.addItem(item);
         }
+        if (container.getItems().isEmpty()) {
+            player.sendMessage("§cBạn không có gì để khoe!");
+            return true;
+        }
         storage.addContainer(container);
         Utils.sendMessages(player, container.getUUID(), container);
         return false;
