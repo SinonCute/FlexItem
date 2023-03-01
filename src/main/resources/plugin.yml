@@ -1,0 +1,5 @@
+name: FlexItem
+version: '${project.version}'
+main: net.minevn.flexitem.FlexItem
+api-version: 1.19
+authors: [ Sinon ]
