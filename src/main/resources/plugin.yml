@@ -5,4 +5,5 @@ api-version: 1.16
 authors: [ Sinon ]
 commands:
   flexitem:
-    description: "abc"
+    aliases:
+      - khoe

@@ -40,9 +40,7 @@ public class FlexContainer {
     }
 
     public void addItem(ItemStack item) {
-        if (items == null) {
-            items = new ArrayList<>();
-        }
+        if (items == null) items = new ArrayList<>();
         items.add(item);
     }
 

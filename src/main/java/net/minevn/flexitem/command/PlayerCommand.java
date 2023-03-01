@@ -26,21 +26,20 @@ public class PlayerCommand implements CommandExecutor {
             return false;
         }
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("§cChỉ có thể sử dụng lệnh này trong game!");
             return false;
         }
-        var player = (Player) sender;
 
         if (args.length == 0) {
-            var container = new FlexContainer(UUID.randomUUID(), ((Player) sender).getUniqueId(),
+            var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
                     TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
-            var item = ((Player) sender).getInventory().getItemInMainHand();
+            var item = player.getInventory().getItemInMainHand();
             var items = new ItemStack[]{item};
             return !addItem(player, container, items);
         }
 
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "help" -> {
                 sender.sendMessage("§a/flexitem help §7- §fXem trợ giúp");
                 sender.sendMessage("§a/flexitem §7- §fĐể khoe vật phẩm trong tay");
@@ -85,7 +84,7 @@ public class PlayerCommand implements CommandExecutor {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
                         TypeContainer.Item, System.currentTimeMillis() + expiredTime);
                 var items = Arrays.stream(player.getInventory().getContents())
-                        .filter(item -> item != null && item.getType().name().endsWith("_SHOVEL"))
+                        .filter(item -> item != null && item.getType().name().endsWith("_HOE"))
                         .toArray(ItemStack[]::new);
                 if (addItem(player, container, items)) return false;
             }
@@ -113,12 +112,11 @@ public class PlayerCommand implements CommandExecutor {
             return true;
         }
         for (ItemStack item : items) {
-            if (item != null) {
-                container.addItem(item);
-            }
+            if (item == null || item.getType().isAir()) continue;
+            container.addItem(item);
         }
         storage.addContainer(container);
-        Utils.sendMessages(player, container.getUUID());
+        Utils.sendMessages(player, container.getUUID(), container.getType());
         return false;
     }
 }
