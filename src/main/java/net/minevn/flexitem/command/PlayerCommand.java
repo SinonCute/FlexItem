@@ -89,6 +89,40 @@ public class PlayerCommand implements CommandExecutor {
                 if (addItem(player, container, items)) return false;
             }
 
+            case "xeng" -> {
+                var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
+                var items = Arrays.stream(player.getInventory().getContents())
+                        .filter(item -> item != null && item.getType().name().endsWith("_SHOVEL"))
+                        .toArray(ItemStack[]::new);
+                if (addItem(player, container, items)) return false;
+            }
+
+            case "cancau" -> {
+                var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
+                var items = Arrays.stream(player.getInventory().getContents())
+                        .filter(item -> item != null && item.getType().name().contains("FISHING_ROD"))
+                        .toArray(ItemStack[]::new);
+                if (addItem(player, container, items)) return false;
+            }
+
+            case "dinhba" -> {
+                var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
+                var items = Arrays.stream(player.getInventory().getContents())
+                        .filter(item -> item != null && item.getType().name().contains("TRIDENT"))
+                        .toArray(ItemStack[]::new);
+                if (addItem(player, container, items)) return false;
+            }
+
+            case "all" -> {
+                var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
+                        TypeContainer.All, System.currentTimeMillis() + expiredTime);
+                var items = player.getInventory().getContents();
+                if (addItem(player, container, items)) return false;
+            }
+
             case "open" -> {
                 var container = storage.getContainer(UUID.fromString(args[1]));
                 if (container == null) {

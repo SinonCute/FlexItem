@@ -13,8 +13,7 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-import static net.minevn.flexitem.object.TypeContainer.Armor;
-import static net.minevn.flexitem.object.TypeContainer.Hand;
+import static net.minevn.flexitem.object.TypeContainer.*;
 
 public class Utils {
 
@@ -45,7 +44,6 @@ public class Utils {
             StaticPane pane = new StaticPane(0, 0, 9, 3);
             int x = 1;
             for (var item : container.getItems()) {
-                Bukkit.broadcastMessage(item.getType().name() + " x: " + x);
                 pane.addItem(new GuiItem(item), x, 1);
                 x += 2;
             }
@@ -63,8 +61,18 @@ public class Utils {
             gui.show(player);
             return;
         }
+        if (container.getType() == All) {
+            ChestGui gui = new ChestGui(6, "Kho đồ của " + player.getDisplayName());
+            StaticPane pane = new StaticPane(0, 0, 9, 6);
+            addItemPane(container, player, gui, pane);
+            return;
+        }
         ChestGui gui = new ChestGui(4, "Khoe vật phẩm của " + player.getDisplayName());
         StaticPane pane = new StaticPane(0, 0, 4, 9);
+        addItemPane(container, player, gui, pane);
+    }
+
+    private static void addItemPane(FlexContainer container, Player player, ChestGui gui, StaticPane pane) {
         int x = 0, y = 0;
         for (var item : container.getItems()) {
             pane.addItem(new GuiItem(item), x, y);
