@@ -27,9 +27,10 @@ public class Utils {
         var player = Bukkit.getPlayer(container.getOwner());
         if (container.getType() == TypeContainer.Armor) {
             ChestGui gui = new ChestGui(4, "Khoe vật phẩm của " + player.getDisplayName());
-            StaticPane pane = new StaticPane(0, 0, 4, 9);
+            StaticPane pane = new StaticPane(0, 0, 9, 6);
             int x = 4, y = 0;
             for (var item : container.getItems()) {
+                Bukkit.broadcastMessage(item.getType().name() + " x: " + x + " y: " + y + "");
                 pane.addItem(new GuiItem(item), x, y);
                 x += 9;
                 y++;
