@@ -1,0 +1,4 @@
+amount_show: 5
+timeout: 12000000 # 20 minutes in milliseconds
+exclude_names:
+  - 'example'

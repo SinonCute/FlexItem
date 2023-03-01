@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.minevn.flexitem.object.FlexContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import remvn.xlibrary.ItemStackUtils;
 
 import java.util.UUID;
 
@@ -18,22 +19,21 @@ import static net.minevn.flexitem.object.TypeContainer.*;
 public class Utils {
 
     public static void sendMessages(Player player, UUID uuid, FlexContainer container) {
-        TextComponent announcement = new TextComponent("§e§l[§f§lFlexItem§e§l] §f" + player.getDisplayName() + " vừa khoe:");
-        TextComponent items = new TextComponent();
-        int max = 5;
+        TextComponent announcement = new TextComponent("§e§l[§f§lFlexItem§e§l] §f" + player.getDisplayName() + " vừa khoe:\n");
+        int max = Config.getAmountShow();
         int min = Math.min(container.getItems().size(), max);
         for (int i = 0; i < min; i++) {
-            items.addExtra("- " + container.getItems().get(i).getItemMeta().getDisplayName() + "\n");
+            announcement.addExtra("- " + ItemStackUtils.getItemDisplayName(container.getItems().get(i)) + "\n");
         }
         if (container.getItems().size() > max) {
-            items.addExtra("- Và " + (container.getItems().size() - max) + " vật phẩm khác");
+            announcement.addExtra("- Và " + (container.getItems().size() - max) + " vật phẩm khác");
         }
-        items.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {
+        announcement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {
                 new TextComponent("§fNhấn để xem vật phẩm của " + player.getDisplayName())
         }));
-        items.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flexitem open " + uuid));
+        announcement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flexitem open " + uuid));
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.spigot().sendMessage(announcement, items);
+            online.spigot().sendMessage(announcement);
         }
     }
 
