@@ -19,17 +19,17 @@ import static net.minevn.flexitem.object.TypeContainer.*;
 public class Utils {
 
     public static void sendMessages(Player player, UUID uuid, FlexContainer container) {
-        TextComponent announcement = new TextComponent("§e§l[§f§lFlexItem§e§l] §f" + player.getDisplayName() + " vừa khoe:\n");
+        TextComponent announcement = new TextComponent("\n§e§l" + player.getName() + " §6vừa khoe:\n");
         int max = Config.getAmountShow();
         int min = Math.min(container.getItems().size(), max);
         for (int i = 0; i < min; i++) {
             announcement.addExtra("- " + ItemStackUtils.getItemDisplayName(container.getItems().get(i)) + "\n");
         }
         if (container.getItems().size() > max) {
-            announcement.addExtra("- Và " + (container.getItems().size() - max) + " vật phẩm khác");
+            announcement.addExtra("- Và " + (container.getItems().size() - max) + " vật phẩm khác\n");
         }
         announcement.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {
-                new TextComponent("§fNhấn để xem vật phẩm của " + player.getDisplayName())
+                new TextComponent("§fNhấn để xem vật phẩm của " + player.getName())
         }));
         announcement.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flexitem open " + uuid));
         for (Player online : Bukkit.getOnlinePlayers()) {
@@ -39,8 +39,9 @@ public class Utils {
 
     public static void openContainer(FlexContainer container) {
         var player = Bukkit.getPlayer(container.getOwner());
+        if (player == null) return;
         if (container.getType() == Armor) {
-            ChestGui gui = new ChestGui(3, "Khoe vật phẩm của " + player.getDisplayName());
+            ChestGui gui = new ChestGui(3, "Vật phẩm của " + player.getName());
             StaticPane pane = new StaticPane(0, 0, 9, 3);
             int x = 1;
             for (var item : container.getItems()) {
@@ -53,7 +54,7 @@ public class Utils {
             return;
         }
         if (container.getType() == Hand) {
-            DropperGui gui = new DropperGui("Khoe vật phẩm của " + player.getDisplayName());
+            DropperGui gui = new DropperGui("Vật phẩm của " + player.getName());
             gui.setOnGlobalClick(event -> event.setCancelled(true));
             StaticPane pane = new StaticPane(1, 1, 1, 1);
             pane.addItem(new GuiItem(container.getItems().get(0)), 0, 0);
@@ -62,12 +63,12 @@ public class Utils {
             return;
         }
         if (container.getType() == All) {
-            ChestGui gui = new ChestGui(6, "Kho đồ của " + player.getDisplayName());
+            ChestGui gui = new ChestGui(6, "Kho đồ của " + player.getName());
             StaticPane pane = new StaticPane(0, 0, 9, 6);
             addItemPane(container, player, gui, pane);
             return;
         }
-        ChestGui gui = new ChestGui(4, "Khoe vật phẩm của " + player.getDisplayName());
+        ChestGui gui = new ChestGui(4, "Vật phẩm của " + player.getName());
         StaticPane pane = new StaticPane(0, 0, 4, 9);
         addItemPane(container, player, gui, pane);
     }
