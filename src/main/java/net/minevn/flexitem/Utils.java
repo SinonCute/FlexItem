@@ -5,9 +5,9 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.gui.type.DropperGui;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.minevn.flexitem.object.FlexContainer;
-import net.minevn.flexitem.object.TypeContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -18,16 +18,23 @@ import static net.minevn.flexitem.object.TypeContainer.Hand;
 
 public class Utils {
 
-    public static void sendMessages(Player player, UUID uuid, TypeContainer type) {
-        String typeString = switch (type) {
-            case Armor -> "trang bị";
-            case Hand -> "vật phẩm";
-            default -> "bộ vật phẩm";
-        };
-        TextComponent message = new TextComponent(player.getDisplayName() + " vừa khoe " + typeString + " của mình, click để xem");
-        message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flexitem open " + uuid));
+    public static void sendMessages(Player player, UUID uuid, FlexContainer container) {
+        TextComponent announcement = new TextComponent("§e§l[§f§lFlexItem§e§l] §f" + player.getDisplayName() + " vừa khoe:");
+        TextComponent items = new TextComponent();
+        int max = 5;
+        int min = Math.min(container.getItems().size(), max);
+        for (int i = 0; i < min; i++) {
+            items.addExtra("- " + container.getItems().get(i).getItemMeta().getDisplayName() + "\n");
+        }
+        if (container.getItems().size() > max) {
+            items.addExtra("- Và " + (container.getItems().size() - max) + " vật phẩm khác");
+        }
+        items.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[] {
+                new TextComponent("§fNhấn để xem vật phẩm của " + player.getDisplayName())
+        }));
+        items.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flexitem open " + uuid));
         for (Player online : Bukkit.getOnlinePlayers()) {
-            online.spigot().sendMessage(message);
+            online.spigot().sendMessage(announcement, items);
         }
     }
 

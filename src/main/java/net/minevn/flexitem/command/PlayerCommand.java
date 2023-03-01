@@ -116,7 +116,7 @@ public class PlayerCommand implements CommandExecutor {
             container.addItem(item);
         }
         storage.addContainer(container);
-        Utils.sendMessages(player, container.getUUID(), container.getType());
+        Utils.sendMessages(player, container.getUUID(), container);
         return false;
     }
 }
