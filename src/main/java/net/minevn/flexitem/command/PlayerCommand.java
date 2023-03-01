@@ -8,13 +8,15 @@ import net.minevn.flexitem.object.TypeContainer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-public class PlayerCommand implements CommandExecutor {
+public class PlayerCommand implements CommandExecutor, TabCompleter {
 
     private final Storage storage = FlexItem.getStorage();
     private final long expiredTime = 10000;
@@ -152,5 +154,14 @@ public class PlayerCommand implements CommandExecutor {
         storage.addContainer(container);
         Utils.sendMessages(player, container.getUUID(), container);
         return false;
+    }
+
+    //auto complete
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("help", "giap", "kiem", "riu", "cup", "cuoc", "xeng", "cancau", "dinhba", "all");
+        }
+        return null;
     }
 }

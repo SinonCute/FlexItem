@@ -12,6 +12,9 @@ public final class FlexItem extends JavaPlugin {
     public void onEnable() {
         storage = new Storage();
         getCommand("flexitem").setExecutor(new PlayerCommand());
+        getCommand("flexitem").setTabCompleter(new PlayerCommand());
+        //add tab complete
+
         RemoveExpired();
     }
 
