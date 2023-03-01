@@ -1,5 +1,8 @@
 name: FlexItem
 version: '${project.version}'
 main: net.minevn.flexitem.FlexItem
-api-version: 1.19
+api-version: 1.16
 authors: [ Sinon ]
+commands:
+  flexitem:
+    description: "abc"

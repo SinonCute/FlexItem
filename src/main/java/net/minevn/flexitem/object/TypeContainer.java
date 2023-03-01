@@ -6,13 +6,10 @@ public enum TypeContainer {
     Item;
 
     public static TypeContainer getType(String stringValue) {
-        switch (stringValue) {
-            case "Armor":
-                return Armor;
-            case "Hand":
-                return Hand;
-            default:
-                return Item;
-        }
+        return switch (stringValue) {
+            case "Armor" -> Armor;
+            case "Hand" -> Hand;
+            default -> Item;
+        };
     }
 }

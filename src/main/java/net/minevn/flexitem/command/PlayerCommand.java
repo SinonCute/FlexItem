@@ -5,7 +5,6 @@ import net.minevn.flexitem.Storage;
 import net.minevn.flexitem.Utils;
 import net.minevn.flexitem.object.FlexContainer;
 import net.minevn.flexitem.object.TypeContainer;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 public class PlayerCommand implements CommandExecutor {
@@ -38,15 +36,8 @@ public class PlayerCommand implements CommandExecutor {
             var container = new FlexContainer(UUID.randomUUID(), ((Player) sender).getUniqueId(),
                     TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
             var item = ((Player) sender).getInventory().getItemInMainHand();
-            if (item.getType() == Material.AIR) {
-                sender.sendMessage("§cBạn không có gì để khoe!");
-                return false;
-            }
-            container.setItems(List.of(item));
-            storage.addContainer(container);
-            Utils.sendMessages(player, container.getUUID());
-            player.sendMessage("§aBạn đã khoe vật phẩm thành công!");
-            return true;
+            var items = new ItemStack[]{item};
+            return !addItem(player, container, items);
         }
 
         switch (args[0]) {
@@ -60,73 +51,43 @@ public class PlayerCommand implements CommandExecutor {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
                         TypeContainer.Armor, System.currentTimeMillis() + expiredTime);
                 var items = player.getInventory().getArmorContents();
-                if (items.length == 0) {
-                    player.sendMessage("§cBạn không có gì để khoe!");
-                    return false;
-                }
-                container.setItems(List.of(items));
-                storage.addContainer(container);
-                Utils.sendMessages(player, container.getUUID());
+                if (addItem(player, container, items)) return false;
             }
 
             case "kiem" -> {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
-                        TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
                 var items = Arrays.stream(player.getInventory().getContents())
                         .filter(item -> item != null && item.getType().name().endsWith("_SWORD"))
                         .toArray(ItemStack[]::new);
-                if (items.length == 0) {
-                    player.sendMessage("§cBạn không có gì để khoe!");
-                    return false;
-                }
-                container.setItems(List.of(items));
-                storage.addContainer(container);
-                Utils.sendMessages(player, container.getUUID());
+                if (addItem(player, container, items)) return false;
             }
 
             case "riu" -> {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
-                        TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
                 var items = Arrays.stream(player.getInventory().getContents())
                         .filter(item -> item != null && item.getType().name().endsWith("_AXE"))
                         .toArray(ItemStack[]::new);
-                if (items.length == 0) {
-                    player.sendMessage("§cBạn không có gì để khoe!");
-                    return false;
-                }
-                container.setItems(List.of(items));
-                storage.addContainer(container);
-                Utils.sendMessages(player, container.getUUID());
+                if (addItem(player, container, items)) return false;
             }
 
             case "cup" -> {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
-                        TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
                 var items = Arrays.stream(player.getInventory().getContents())
                         .filter(item -> item != null && item.getType().name().endsWith("_PICKAXE"))
                         .toArray(ItemStack[]::new);
-                if (items.length == 0) {
-                    player.sendMessage("§cBạn không có gì để khoe!");
-                    return false;
-                }
-                container.setItems(List.of(items));
-                storage.addContainer(container);
-                Utils.sendMessages(player, container.getUUID());
+                if (addItem(player, container, items)) return false;
             }
 
             case "cuoc" -> {
                 var container = new FlexContainer(UUID.randomUUID(), player.getUniqueId(),
-                        TypeContainer.Hand, System.currentTimeMillis() + expiredTime);
+                        TypeContainer.Item, System.currentTimeMillis() + expiredTime);
                 var items = Arrays.stream(player.getInventory().getContents())
                         .filter(item -> item != null && item.getType().name().endsWith("_SHOVEL"))
                         .toArray(ItemStack[]::new);
-                if (items.length == 0) {
-                    player.sendMessage("§cBạn không có gì để khoe!");
-                    return false;
-                }
-                container.setItems(List.of(items));
-                storage.addContainer(container);
-                Utils.sendMessages(player, container.getUUID());
+                if (addItem(player, container, items)) return false;
             }
 
             case "open" -> {
@@ -143,6 +104,21 @@ public class PlayerCommand implements CommandExecutor {
             }
             default -> player.sendMessage("§cSai cú pháp! /flexitem help");
         }
+        return false;
+    }
+
+    private boolean addItem(Player player, FlexContainer container, ItemStack[] items) {
+        if (items.length == 0) {
+            player.sendMessage("§cBạn không có gì để khoe!");
+            return true;
+        }
+        for (ItemStack item : items) {
+            if (item != null) {
+                container.addItem(item);
+            }
+        }
+        storage.addContainer(container);
+        Utils.sendMessages(player, container.getUUID());
         return false;
     }
 }
